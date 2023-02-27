@@ -18,7 +18,19 @@ class Http
         private string $token,
         private LoopInterface $loop,
         private LoggerInterface $logger,
+        private array $middlewares = [],
+        private array $postwares = []
     ) {
+    }
+
+    public function withRateLimiting(): self
+    {
+        $bucket = new Bucket();
+
+        $this->middlewares[] = new RateLimitMiddleware($bucket);
+        $this->postwares[] = new RateLimitPostWare($bucket);
+
+        return $this;
     }
 
     public function get(
@@ -89,9 +101,35 @@ class Http
     public function request(
         RequestTypes $requestType,
         Endpoint $endpoint,
-        string|array|Body $content,
+        null|string|array|Body $content = null,
         array $headers = []
     ): ExtendedPromiseInterface {
-        return new Promise(fn () => 1);
+        return new Promise(function ($resolve) {
+            $request = new Request();
+
+            $this->runMiddlewares($request, $this->middlewares)->then(function () use ($resolve) {
+                $resolve(1);
+            });
+        });
+    }
+
+    /**
+     * @param MiddlewareInterface[] $middlewares
+     */
+    private function runMiddlewares(Request $request, array $middlewares)
+    {
+        return new Promise(function ($resolve) use ($request, $middlewares) {
+            if (count($middlewares) === 0) {
+                $resolve($request);
+            }
+
+            $toRun = array_shift($middlewares);
+
+            $toRun->handle($request, function ($request) use ($middlewares, $resolve) {
+                $this->runMiddlewares($request, $middlewares)->then(
+                    fn ($request) => $resolve($request)
+                );
+            });
+        });
     }
 }

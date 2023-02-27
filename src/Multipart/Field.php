@@ -6,5 +6,4 @@ namespace Ragnarok\Bifrost\Multipart;
 
 class Field
 {
-    
 }

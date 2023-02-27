@@ -6,5 +6,4 @@ namespace Ragnarok\Bifrost;
 
 class Endpoint
 {
-    
 }

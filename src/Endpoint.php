@@ -13,7 +13,7 @@ class Endpoint extends DiscordEndpoints implements EndpointInterface
 {
     public const BASE_URL = 'https://discord.com/api/v10';
 
-    public const RATELIMIT_PARAMS = [':channel_id:', ':guild_id:', ':webhook_id:', ':thread_id:'];
+    public const RATE_LIMIT_PARAMS = [':channel_id:', ':guild_id:', ':webhook_id:', ':thread_id:'];
 
     /**
      * @throws MissingParamException

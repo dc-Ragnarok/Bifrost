@@ -102,8 +102,8 @@ class HttpTest extends TestCase
         $driver->shouldHaveReceived('makeRequest')->with(Mockery::on(
             function (Request $request) use ($type) {
                 return $request->getMethod() === $type;
-            })
-        );
+            }
+        ));
     }
 
     public static function requestsOfTypeProvider(): array

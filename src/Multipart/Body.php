@@ -8,11 +8,9 @@ class Body
 {
     public function getHeaders(): array
     {
-
     }
 
     public function getContent(): string
     {
-
     }
 }

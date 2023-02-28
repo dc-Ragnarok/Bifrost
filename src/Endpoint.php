@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Ragnarok\Bifrost;
 
+use Ragnarok\Bifrost\Const\DiscordEndpoints;
 use Ragnarok\Bifrost\Exceptions\MissingParamException;
 use Spatie\Regex\MatchResult;
 use Spatie\Regex\Regex;
 
-class Endpoint implements EndpointInterface
+class Endpoint extends DiscordEndpoints implements EndpointInterface
 {
     public const BASE_URL = 'https://discord.com/api/v10';
 

@@ -94,7 +94,8 @@ class EndpointTest extends TestCase
 
         Endpoint::bind(
             ':one:/:two:/:three:',
-            'one', 'two'
+            'one',
+            'two'
         );
     }
 }

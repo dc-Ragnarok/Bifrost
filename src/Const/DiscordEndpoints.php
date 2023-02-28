@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace Ragnarok\Bifrost\Const;
 
+/**
+ * A lot of these bindings were taken from DiscordPHP-Http#3568e9b
+ * params were altered to include an ending : as well.
+ *
+ * See original copyright notice below
+ *
+ * Copyright (c) 2021-present David Cole <david.cole1340@gmail.com>
+ *
+ * @see https://github.com/discord-php/DiscordPHP-Http
+ */
 class DiscordEndpoints
 {
     /* GET **/

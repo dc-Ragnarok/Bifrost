@@ -59,7 +59,7 @@ class Endpoint extends DiscordEndpoints implements EndpointInterface
         $requiredParams = [];
 
         foreach ($this->params as $key => $value) {
-            if (in_array($key, self::RATELIMIT_PARAMS)) {
+            if (in_array($key, self::RATE_LIMIT_PARAMS)) {
                 $requiredParams[$key] = $value;
             }
         }

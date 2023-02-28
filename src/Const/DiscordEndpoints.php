@@ -18,11 +18,13 @@ class DiscordEndpoints
     /* GET, POST, PUT **/
     public const GUILD_APPLICATION_COMMANDS = 'applications/:application_id:/guilds/:guild_id:/commands';
     /* GET, PUT **/
-    public const GUILD_APPLICATION_COMMANDS_PERMISSIONS = 'applications/:application_id:/guilds/:guild_id:/commands/permissions';
+    public const GUILD_APPLICATION_COMMANDS_PERMISSIONS
+        = 'applications/:application_id:/guilds/:guild_id:/commands/permissions';
     /* GET, PATCH, DELETE **/
     public const GUILD_APPLICATION_COMMAND = 'applications/:application_id:/guilds/:guild_id:/commands/:command_id:';
     /* GET, PUT **/
-    public const GUILD_APPLICATION_COMMAND_PERMISSIONS = 'applications/:application_id:/guilds/:guild_id:/commands/:command_id:/permissions';
+    public const GUILD_APPLICATION_COMMAND_PERMISSIONS
+        = 'applications/:application_id:/guilds/:guild_id:/commands/:command_id:/permissions';
     /* POST **/
     public const INTERACTION_RESPONSE = 'interactions/:interaction_id:/:interaction_token:/callback';
     /* PATCH, DELETE **/
@@ -214,7 +216,8 @@ class DiscordEndpoints
     /* GET **/
     public const USER_CURRENT_CONNECTIONS = self::USER_CURRENT . '/connections';
     /* GET, PUT **/
-    public const USER_CURRENT_APPLICATION_ROLE_CONNECTION = self::USER_CURRENT . '/applications/:application_id:/role-connection';
+    public const USER_CURRENT_APPLICATION_ROLE_CONNECTION
+        = self::USER_CURRENT . '/applications/:application_id:/role-connection';
     /* GET **/
     public const APPLICATION_CURRENT = 'oauth2/applications/@me';
 

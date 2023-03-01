@@ -105,15 +105,15 @@ class Http
     public function request(
         RequestTypes $requestType,
         EndpointInterface $endpoint,
-        null|string|array|Body $content = null,
+        null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
-        $requestContent = RequestContent::from($content);
+        $requestContent = RequestContent::from($body);
 
         $request = new Request(
             $requestType,
             $endpoint,
-            $requestContent->content,
+            $requestContent->body,
             array_merge(
                 $requestContent->headers,
                 $headers

@@ -10,7 +10,7 @@ class Body
     {
     }
 
-    public function getContent(): string
+    public function getBody(): string
     {
     }
 }

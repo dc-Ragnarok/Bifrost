@@ -11,7 +11,7 @@ class Request
     public function __construct(
         private RequestTypes $method,
         private EndpointInterface $endpoint,
-        private string $content,
+        private string $body = '',
         private array $headers = []
     ) {
     }
@@ -40,16 +40,16 @@ class Request
         return $this->endpoint;
     }
 
-    public function setContent(string $content): self
+    public function setBody(string $body): self
     {
-        $this->content = $content;
+        $this->body = $body;
 
         return $this;
     }
 
-    public function getContent(): string
+    public function getBody(): string
     {
-        return $this->content;
+        return $this->body;
     }
 
     public function setHeaders(array $headers)
@@ -61,18 +61,24 @@ class Request
 
     public function addHeader(string $header, string $value)
     {
-        $this->headers[] = [$header => $value];
+        if (!isset($this->headers[$header])) {
+            $this->headers[$header] = [];
+        }
+
+        $this->headers[$header][] = $value;
 
         return $this;
     }
 
-    public function getHeaders(?string $headerName = null): array
+    public function getHeader(string $header): array
     {
-        return is_null($headerName)
-            ? $this->headers
-            : array_values(array_filter(
-                $this->headers,
-                fn ($header) => array_keys($header) === [$headerName]
-            ));
+        return isset($this->headers[$header])
+            ? $this->headers[$header]
+            : [];
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 }

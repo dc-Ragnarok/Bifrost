@@ -16,8 +16,7 @@ class RequestTest extends TestCase
     {
         return new Request(
             RequestTypes::GET,
-            Mockery::mock(EndpointInterface::class),
-            '::content::'
+            Mockery::mock(EndpointInterface::class)
         );
     }
 
@@ -43,20 +42,20 @@ class RequestTest extends TestCase
         );
     }
 
-    public function testContent()
+    public function testBody()
     {
         $request = $this->getRequest();
 
         $this->assertEquals(
-            '::content::',
-            $request->getContent()
+            '',
+            $request->getBody()
         );
 
-        $request->setContent('::other content::');
+        $request->setBody('::other body::');
 
         $this->assertEquals(
-            '::other content::',
-            $request->getContent()
+            '::other body::',
+            $request->getBody()
         );
     }
 
@@ -71,25 +70,31 @@ class RequestTest extends TestCase
 
         $request->addHeader('::header::', '::value::');
         $this->assertEquals(
-            [['::header::' => '::value::']],
+            ['::header::' => ['::value::']],
             $request->getHeaders()
         );
 
-        $request->setHeaders([['::other header::' => '::other value::']]);
+        $request->addHeader('::header::', '::second value::');
         $this->assertEquals(
-            [['::other header::' => '::other value::']],
+            ['::header::' => ['::value::', '::second value::']],
             $request->getHeaders()
         );
 
-        $request->addHeader('::different header::', '::yet another value::');
-        $request->addHeader('::other header::', '::yet another value::');
+        $request->setHeaders(['::other header::' => ['::other value::']]);
+        $this->assertEquals(
+            ['::other header::' => ['::other value::']],
+            $request->getHeaders()
+        );
 
         $this->assertEquals(
-            [
-                ['::other header::' => '::other value::'],
-                ['::other header::' => '::yet another value::'],
-            ],
-            $request->getHeaders('::other header::')
+            [],
+            $request->getHeader('::not set header::')
+        );
+
+        $request->addHeader('::yet anohter header::', '::its value::');
+        $this->assertEquals(
+            ['::its value::'],
+            $request->getHeader('::yet anohter header::')
         );
     }
 }

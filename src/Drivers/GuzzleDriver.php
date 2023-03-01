@@ -29,11 +29,14 @@ class GuzzleDriver implements DriverInterface
         );
 
         return new Promise(function ($resolve, $reject) use ($psr7Request) {
-            $promise = $this->client->sendAsync($psr7Request)->then(function (ResponseInterface $response) use ($resolve) {
-                $resolve($response);
-            }, function (RequestException $e) use ($reject) {
-                $reject($e);
-            });
+            $promise = $this->client->sendAsync($psr7Request)->then(
+                function (ResponseInterface $response) use ($resolve) {
+                    $resolve($response);
+                },
+                function (RequestException $e) use ($reject) {
+                    $reject($e);
+                }
+            );
 
             $promise->wait();
         });

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Ragnarok\Bifrost;
+namespace Ragnarok\Bifrost\TestCase;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -12,7 +12,7 @@ use Ragnarok\Bifrost\Request;
 
 use function React\Async\await;
 
-abstract class DriverInterfaceTest extends TestCase
+abstract class DriverInterfaceTestCase extends TestCase
 {
     abstract protected function getDriver(): DriverInterface;
 

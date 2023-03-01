@@ -6,4 +6,11 @@ namespace Ragnarok\Bifrost\Multipart;
 
 class Body
 {
+    public function getHeaders(): array
+    {
+    }
+
+    public function getBody(): string
+    {
+    }
 }

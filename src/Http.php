@@ -32,6 +32,11 @@ class Http
         return $this;
     }
 
+    public function withMiddleware(MiddlewareInterface $middlewareInterface)
+    {
+        $this->middlewares[] = $middlewareInterface;
+    }
+
     public function get(
         EndpointInterface $endpoint,
         null|string|array|Body $body = null,

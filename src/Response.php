@@ -12,4 +12,26 @@ class Response
         private array $headers
     ) {
     }
+
+    public function getStatusCode(): int
+    {
+        return $this->status;
+    }
+
+    public function getBody(): mixed
+    {
+        return $this->body;
+    }
+
+    public function setBody(mixed $body): static
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
 }

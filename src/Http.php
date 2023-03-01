@@ -115,23 +115,19 @@ class Http
             )
         );
 
-        return new Promise(function ($resolve) use ($request) {
-            $this
-                ->runMiddlewares($request, $this->middlewares)
-                ->then(function () use ($request) {
-                    return $this->driver->makeRequest(
-                        $request
-                    );
-                })->then(function ($response) use ($resolve) {
-                    $resolve($response);
-                });
-        });
+        return $this
+            ->runMiddlewares($request, $this->middlewares)
+            ->then(function () use ($request) {
+                return $this->driver->makeRequest(
+                    $request
+                );
+            });
     }
 
     /**
      * @param MiddlewareInterface[] $middlewares
      */
-    private function runMiddlewares(Request $request, array $middlewares)
+    private function runMiddlewares(Request $request, array $middlewares): ExtendedPromiseInterface
     {
         return new Promise(function ($resolve) use ($request, $middlewares) {
             if (count($middlewares) === 0) {

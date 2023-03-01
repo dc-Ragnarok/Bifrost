@@ -47,7 +47,7 @@ class Endpoint extends DiscordEndpoints implements EndpointInterface
 
     public function getCompleteEndpoint(): string
     {
-        return self::BASE_URL . str_replace(
+        return self::BASE_URL . '/' . str_replace(
             array_keys($this->params),
             array_values($this->params),
             $this->uri

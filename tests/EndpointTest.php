@@ -18,7 +18,7 @@ class EndpointTest extends TestCase
         ]);
 
         $this->assertEquals(
-            Endpoint::BASE_URL . 'some/something funny/to/something unfunny',
+            Endpoint::BASE_URL . '/' . 'some/something funny/to/something unfunny',
             $endpoint->getCompleteEndpoint()
         );
     }
@@ -42,7 +42,7 @@ class EndpointTest extends TestCase
     public function testBind(string $uri, array $replacements, string $expected)
     {
         $this->assertEquals(
-            Endpoint::BASE_URL . $expected,
+            Endpoint::BASE_URL . '/' . $expected,
             Endpoint::bind($uri, ...$replacements)->getCompleteEndpoint()
         );
     }

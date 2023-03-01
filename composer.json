@@ -1,5 +1,5 @@
 {
-    "name": "ragnarok/bifrost",
+    "name": "dc-ragnarok/bifrost",
     "description": "Library to handle Discord REST API",
     "type": "library",
     "license": "MIT",

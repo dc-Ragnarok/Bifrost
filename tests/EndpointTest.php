@@ -85,6 +85,11 @@ class EndpointTest extends TestCase
                 'replacements' => ['::thing other::', '::thing::'],
                 'expected' => 'something/::thing other::/::thing::',
             ],
+            'No params' => [
+                'uri' => 'something/without/params',
+                'replacements' => [],
+                'expected' => 'something/without/params',
+            ],
         ];
     }
 

@@ -15,7 +15,9 @@ use React\Promise\Promise;
 
 class GuzzleDriver implements DriverInterface
 {
-    public function __construct(private Client $client = new Client())
+    public function __construct(
+        private Client $client = new Client()
+    )
     {
     }
 

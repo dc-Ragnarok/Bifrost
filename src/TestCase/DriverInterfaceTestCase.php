@@ -7,6 +7,7 @@ namespace Ragnarok\Bifrost\TestCase;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\DriverInterface;
+use Ragnarok\Bifrost\EndpointInterface;
 use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Request;
 
@@ -24,7 +25,7 @@ abstract class DriverInterfaceTestCase extends TestCase
     ): Request {
         $request = Mockery::mock(Request::class);
 
-        $endpoint = Mockery::mock(Endpoint::class);
+        $endpoint = Mockery::mock(EndpointInterface::class);
         $endpoint->shouldReceive('getCompleteEndpoint')->andReturn($url);
 
         $request->shouldReceive([

@@ -6,6 +6,8 @@
 
 <p align="center">A Discord HTTP client</p>
 
+[![Bifrost Unit Tests](https://github.com/dc-Ragnarok/Bifrost/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/dc-Ragnarok/Bifrost/actions/workflows/unit-tests.yml)
+
 ```
 composer require dc-ragnarok/bifrost
 ```

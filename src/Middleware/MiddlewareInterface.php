@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ragnarok\Bifrost;
+namespace Ragnarok\Bifrost\Middleware;
+
+use Ragnarok\Bifrost\Request;
 
 interface MiddlewareInterface
 {

@@ -1,10 +1,10 @@
 name: Bifrost Unit Tests
 run-name: ${{ github.actor }} is running tests
 on:
+  pull_request
   push:
     branches:
       - master
-  pull_request
 
 jobs:
   cs:

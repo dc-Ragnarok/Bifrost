@@ -12,6 +12,7 @@ use Ragnarok\Bifrost\EndpointInterface;
 use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Http;
 use Ragnarok\Bifrost\MiddlewareInterface;
+use Ragnarok\Bifrost\Postware\PostwareInterface;
 use Ragnarok\Bifrost\Request;
 use Ragnarok\Bifrost\Response;
 use React\Promise\Promise;
@@ -82,6 +83,39 @@ class HttpTest extends TestCase
         $mw1->shouldHaveReceived('handle');
 
         $mw2->shouldHaveReceived('handle');
+    }
+
+    public function testItRunsPostwares()
+    {
+        $pw1 = Mockery::mock(PostwareInterface::class);
+        $pw2 = Mockery::mock(PostwareInterface::class);
+
+        $http = new Http(
+            $this->getMockDriver(),
+            postwares: [$pw1, $pw2]
+        );
+
+        $mockResponse = Mockery::mock(Response::class);
+
+        $pw1->shouldReceive('handle')->andReturnUsing(function ($request, $next) use ($mockResponse) {
+            $next($mockResponse);
+        });
+
+        $pw2->shouldReceive('handle')->with(
+            $mockResponse,
+            Mockery::on(fn ($v) => true)
+        )->andReturnUsing(function ($request, $next) {
+            $next($request);
+        });
+
+        await($http->request(
+            RequestTypes::GET,
+            Mockery::mock(EndpointInterface::class),
+        ));
+
+        $pw1->shouldHaveReceived('handle');
+
+        $pw2->shouldHaveReceived('handle');
     }
 
     /**

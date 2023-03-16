@@ -6,12 +6,11 @@ namespace Tests\Ragnarok\Bifrost\Middleware;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Ragnarok\Bifrost\Endpoint;
 use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Middleware\LoggingMiddleware;
-use Ragnarok\Bifrost\Request;
+use Psr\Http\Message\RequestInterface;
 
 class RateLimitMiddlewareTest extends MockeryTestCase
 {
@@ -26,6 +25,7 @@ class RateLimitMiddlewareTest extends MockeryTestCase
         $endpoint = Mockery::mock(Endpoint::class);
         $endpoint->shouldReceive('getCompleteEndpoint')->andReturn('::url::');
 
+        // TODO change to use RequestInterface implementation
         $request = new Request(
             RequestTypes::GET,
             $endpoint

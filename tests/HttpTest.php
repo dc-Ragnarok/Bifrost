@@ -13,8 +13,8 @@ use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Http;
 use Ragnarok\Bifrost\MiddlewareInterface;
 use Ragnarok\Bifrost\Postware\PostwareInterface;
-use Ragnarok\Bifrost\Request;
-use Ragnarok\Bifrost\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use React\Promise\Promise;
 
 use function React\Async\await;
@@ -134,7 +134,7 @@ class HttpTest extends TestCase
         );
 
         $driver->shouldHaveReceived('makeRequest')->with(Mockery::on(
-            function (Request $request) use ($type) {
+            function (RequestInterface $request) use ($type) {
                 return $request->getMethod() === $type;
             }
         ));

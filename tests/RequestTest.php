@@ -8,12 +8,13 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\EndpointInterface;
 use Ragnarok\Bifrost\Enums\RequestTypes;
-use Ragnarok\Bifrost\Request;
+use Psr\Http\Message\RequestInterface;
 
 class RequestTest extends TestCase
 {
-    private function getRequest(): Request
+    private function getRequest(): RequestInterface
     {
+        // TODO change to use RequestInterface implementation
         return new Request(
             RequestTypes::GET,
             Mockery::mock(EndpointInterface::class)

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ragnarok\Bifrost\Const;
+namespace Ragnarok\Bifrost\Constants;
 
 /**
  * A lot of these bindings were taken from DiscordPHP-Http#3568e9b

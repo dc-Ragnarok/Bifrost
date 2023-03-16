@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ragnarok\Bifrost;
 
-use Ragnarok\Bifrost\Const\DiscordEndpoints;
+use Ragnarok\Bifrost\Constants\DiscordEndpoints;
 use Ragnarok\Bifrost\Exceptions\MissingParamException;
 use Spatie\Regex\MatchResult;
 use Spatie\Regex\Regex;

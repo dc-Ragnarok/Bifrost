@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Ragnarok\Bifrost;
 
 use Ragnarok\Bifrost\Enums\RequestTypes;
+use Ragnarok\Bifrost\Middleware\MiddlewareInterface;
+use Ragnarok\Bifrost\Middleware\RateLimitMiddleware;
 use Ragnarok\Bifrost\Multipart\Body;
 use React\Promise\ExtendedPromiseInterface;
 use React\Promise\Promise;
+use Ragnarok\Bifrost\Postware\PostwareInterface;
+use Ragnarok\Bifrost\Postware\RateLimitPostWare;
 
 class Http
 {
     /**
-     * @param MiddlewareInterace[] $middlewares
+     * @param MiddlewareInterface[] $middlewares
      * @param PostwareInterface[] $postwares
      */
     public function __construct(
@@ -126,7 +130,8 @@ class Http
                 return $this->driver->makeRequest(
                     $request
                 );
-            });
+            })
+            ->then(fn($response) => $this->runPostwares($response, $this->postwares));
     }
 
     /**
@@ -144,6 +149,26 @@ class Http
             $toRun->handle($request, function ($request) use ($middlewares, $resolve) {
                 $this->runMiddlewares($request, $middlewares)->then(
                     fn ($request) => $resolve($request)
+                );
+            });
+        });
+    }
+
+    /**
+     * @param PostwareInterface[] $postwares
+     */
+    private function runPostwares(Response $response, array $postwares): ExtendedPromiseInterface
+    {
+        return new Promise(function ($resolve) use ($response, $postwares) {
+            if (count($postwares) === 0) {
+                $resolve($response);
+            }
+
+            $toRun = array_shift($postwares);
+
+            $toRun->handle($response, function ($response) use ($postwares, $resolve) {
+                $this->runPostwares($response, $postwares)->then(
+                    fn ($response) => $resolve($response)
                 );
             });
         });

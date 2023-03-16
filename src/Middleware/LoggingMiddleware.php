@@ -19,8 +19,8 @@ class LoggingMiddleware implements MiddlewareInterface
             'info',
             sprintf(
                 'Handling %s request to %s',
-                $request->getMethod()->value,
-                $request->getEndpoint()->getCompleteEndpoint()
+                $request->getMethod(),
+                (string) $request->getUri()
             )
         );
 

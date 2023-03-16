@@ -8,10 +8,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\DriverInterface;
-use Ragnarok\Bifrost\EndpointInterface;
+use Ragnarok\Bifrost\Endpoint;
 use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Http;
-use Ragnarok\Bifrost\MiddlewareInterface;
+use Ragnarok\Bifrost\Middleware\MiddlewareInterface;
 use Ragnarok\Bifrost\Postware\PostwareInterface;
 use Ragnarok\Bifrost\Request;
 use Ragnarok\Bifrost\Response;
@@ -46,7 +46,7 @@ class HttpTest extends TestCase
 
         await($http->request(
             RequestTypes::GET,
-            Mockery::mock(EndpointInterface::class),
+            Endpoint::bind('nothing')
         ));
 
         $driver->shouldHaveReceived('makeRequest');
@@ -77,7 +77,42 @@ class HttpTest extends TestCase
 
         await($http->request(
             RequestTypes::GET,
-            Mockery::mock(EndpointInterface::class),
+            Endpoint::bind('nothing')
+        ));
+
+        $mw1->shouldHaveReceived('handle');
+
+        $mw2->shouldHaveReceived('handle');
+    }
+
+    public function testItCanAddMiddleware()
+    {
+        $mw1 = Mockery::mock(MiddlewareInterface::class);
+        $mw2 = Mockery::mock(MiddlewareInterface::class);
+
+        $http = new Http(
+            $this->getMockDriver(),
+            [$mw1]
+        );
+
+        $http->withMiddleware($mw2);
+
+        $mockRequest = Mockery::mock(Request::class);
+
+        $mw1->shouldReceive('handle')->andReturnUsing(function ($request, $next) use ($mockRequest) {
+            $next($mockRequest);
+        });
+
+        $mw2->shouldReceive('handle')->with(
+            $mockRequest,
+            Mockery::on(fn ($v) => true)
+        )->andReturnUsing(function ($request, $next) {
+            $next($request);
+        });
+
+        await($http->request(
+            RequestTypes::GET,
+            Endpoint::bind('nothing')
         ));
 
         $mw1->shouldHaveReceived('handle');
@@ -110,7 +145,42 @@ class HttpTest extends TestCase
 
         await($http->request(
             RequestTypes::GET,
-            Mockery::mock(EndpointInterface::class),
+            Endpoint::bind('nothing')
+        ));
+
+        $pw1->shouldHaveReceived('handle');
+
+        $pw2->shouldHaveReceived('handle');
+    }
+
+    public function testItCanAddPostware()
+    {
+        $pw1 = Mockery::mock(PostwareInterface::class);
+        $pw2 = Mockery::mock(PostwareInterface::class);
+
+        $http = new Http(
+            $this->getMockDriver(),
+            postwares: [$pw1]
+        );
+
+        $http->withPostware($pw2);
+
+        $mockResponse = Mockery::mock(Response::class);
+
+        $pw1->shouldReceive('handle')->andReturnUsing(function ($request, $next) use ($mockResponse) {
+            $next($mockResponse);
+        });
+
+        $pw2->shouldReceive('handle')->with(
+            $mockResponse,
+            Mockery::on(fn ($v) => true)
+        )->andReturnUsing(function ($request, $next) {
+            $next($request);
+        });
+
+        await($http->request(
+            RequestTypes::GET,
+            Endpoint::bind('nothing')
         ));
 
         $pw1->shouldHaveReceived('handle');
@@ -130,12 +200,12 @@ class HttpTest extends TestCase
 
         call_user_func(
             [$http, $method],
-            Mockery::mock(EndpointInterface::class)
+            Endpoint::bind('nothing')
         );
 
         $driver->shouldHaveReceived('makeRequest')->with(Mockery::on(
             function (Request $request) use ($type) {
-                return $request->getMethod() === $type;
+                return $request->getMethod() === $type->value;
             }
         ));
     }

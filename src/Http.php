@@ -40,6 +40,11 @@ class Http
     {
         $this->middlewares[] = $middlewareInterface;
     }
+    
+    public function withPostware(PostwareInterface $postwareInterface)
+    {
+        $this->postwares[] = $postwareInterface;
+    }
 
     public function get(
         EndpointInterface $endpoint,

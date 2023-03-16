@@ -14,7 +14,6 @@ use Ragnarok\Bifrost\Http;
 use Ragnarok\Bifrost\Middleware\MiddlewareInterface;
 use Ragnarok\Bifrost\Postware\PostwareInterface;
 use Ragnarok\Bifrost\Request;
-use Ragnarok\Bifrost\Response;
 use React\Promise\Promise;
 
 use function React\Async\await;

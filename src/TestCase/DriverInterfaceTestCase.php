@@ -9,7 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\DriverInterface;
 use Ragnarok\Bifrost\EndpointInterface;
 use Ragnarok\Bifrost\Enums\RequestTypes;
-use Ragnarok\Bifrost\Request;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 use function React\Async\await;
 
@@ -22,8 +23,8 @@ abstract class DriverInterfaceTestCase extends TestCase
         string $url,
         string $content = '',
         array $headers = []
-    ): Request {
-        $request = Mockery::mock(Request::class);
+    ): RequestInterface {
+        $request = Mockery::mock(RequestInterface::class);
 
         $endpoint = Mockery::mock(EndpointInterface::class);
         $endpoint->shouldReceive('getCompleteEndpoint')->andReturn($url);

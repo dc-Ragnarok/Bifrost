@@ -7,6 +7,7 @@ namespace Tests\Ragnarok\Bifrost;
 use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\Endpoint;
 use Ragnarok\Bifrost\Enums\RequestTypes;
+use Psr\Http\Message\RequestInterface;
 use Ragnarok\Bifrost\Request;
 
 class RequestTest extends TestCase

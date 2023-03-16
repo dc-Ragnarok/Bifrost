@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Ragnarok\Bifrost\Postware;
 
-use Ragnarok\Bifrost\Response;
+use Psr\Http\Message\ResponseInterface;
 
 class RateLimitPostWare implements PostwareInterface
 {
-    public function handle(Response $response, callable $next)
+    public function handle(ResponseInterface $response, callable $next)
     {
         $next($response);
     }

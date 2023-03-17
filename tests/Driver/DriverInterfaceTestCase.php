@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ragnarok\Bifrost\TestCase;
+namespace Tests\Ragnarok\Bifrost\Driver;
 
+use HttpSoft\Message\Request;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\DriverInterface;
-use Ragnarok\Bifrost\EndpointInterface;
-use Ragnarok\Bifrost\Enums\RequestTypes;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -24,19 +23,12 @@ abstract class DriverInterfaceTestCase extends TestCase
         string $content = '',
         array $headers = []
     ): RequestInterface {
-        $request = Mockery::mock(RequestInterface::class);
-
-        $endpoint = Mockery::mock(EndpointInterface::class);
-        $endpoint->shouldReceive('getCompleteEndpoint')->andReturn($url);
-
-        $request->shouldReceive([
-            'getMethod' => RequestTypes::from($method),
-            'getEndpoint' => $endpoint,
-            'getBody' => $content,
-            'getHeaders' => $headers,
-        ]);
-
-        return $request;
+        return new Request(
+            $method,
+            $url,
+            $headers,
+            $content
+        );
     }
 
     /**
@@ -58,7 +50,7 @@ abstract class DriverInterfaceTestCase extends TestCase
         $this->assertNotEquals('', $response->getBody());
         $this->assertEquals(200, $response->getStatusCode());
 
-        $jsonDecodedBody = json_decode($response->getBody(), true);
+        $jsonDecodedBody = json_decode((string) $response->getBody(), true);
 
         $verify['method'] = strtoupper($method);
 

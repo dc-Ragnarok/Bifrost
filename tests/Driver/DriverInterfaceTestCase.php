@@ -2,40 +2,43 @@
 
 declare(strict_types=1);
 
-namespace Ragnarok\Bifrost\TestCase;
+namespace Tests\Ragnarok\Bifrost\Driver;
 
+use HttpSoft\Message\Request;
+use HttpSoft\Message\Stream;
+use HttpSoft\Message\StreamFactory;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\DriverInterface;
-use Ragnarok\Bifrost\EndpointInterface;
-use Ragnarok\Bifrost\Enums\RequestTypes;
-use Ragnarok\Bifrost\Request;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 use function React\Async\await;
 
 abstract class DriverInterfaceTestCase extends TestCase
 {
+    protected StreamFactory $streamFactory;
     abstract protected function getDriver(): DriverInterface;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->streamFactory = new StreamFactory();
+    }
 
     private function getRequest(
         string $method,
         string $url,
         string $content = '',
         array $headers = []
-    ): Request {
-        $request = Mockery::mock(Request::class);
-
-        $endpoint = Mockery::mock(EndpointInterface::class);
-        $endpoint->shouldReceive('getCompleteEndpoint')->andReturn($url);
-
-        $request->shouldReceive([
-            'getMethod' => RequestTypes::from($method),
-            'getEndpoint' => $endpoint,
-            'getBody' => $content,
-            'getHeaders' => $headers,
-        ]);
-
-        return $request;
+    ): RequestInterface {
+        return new Request(
+            $method,
+            $url,
+            $headers,
+            $this->streamFactory->createStream($content)
+        );
     }
 
     /**
@@ -57,7 +60,7 @@ abstract class DriverInterfaceTestCase extends TestCase
         $this->assertNotEquals('', $response->getBody());
         $this->assertEquals(200, $response->getStatusCode());
 
-        $jsonDecodedBody = json_decode($response->getBody(), true);
+        $jsonDecodedBody = json_decode((string) $response->getBody(), true);
 
         $verify['method'] = strtoupper($method);
 

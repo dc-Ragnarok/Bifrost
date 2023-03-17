@@ -6,7 +6,6 @@ namespace Tests\Ragnarok\Bifrost\Middleware;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Ragnarok\Bifrost\Endpoint;
 use Ragnarok\Bifrost\Enums\RequestTypes;

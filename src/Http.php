@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Ragnarok\Bifrost;
 
+use HttpSoft\Message\Request;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Middleware\MiddlewareInterface;
 use Ragnarok\Bifrost\Middleware\RateLimitMiddleware;
@@ -117,16 +120,11 @@ class Http
         null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
-        $requestContent = RequestContent::from($body);
-
         $request = new Request(
-            $requestType,
-            $endpoint,
-            $requestContent->body,
-            array_merge(
-                $requestContent->headers,
-                $headers
-            )
+            $requestType->value,
+            $endpoint->getCompleteEndpoint(),
+            $headers,
+            $body
         );
 
         return $this
@@ -142,7 +140,7 @@ class Http
     /**
      * @param MiddlewareInterface[] $middlewares
      */
-    private function runMiddlewares(Request $request, array $middlewares): ExtendedPromiseInterface
+    private function runMiddlewares(RequestInterface $request, array $middlewares): ExtendedPromiseInterface
     {
         return new Promise(function ($resolve) use ($request, $middlewares) {
             if (count($middlewares) === 0) {
@@ -162,7 +160,7 @@ class Http
     /**
      * @param PostwareInterface[] $postwares
      */
-    private function runPostwares(Response $response, array $postwares): ExtendedPromiseInterface
+    private function runPostwares(ResponseInterface $response, array $postwares): ExtendedPromiseInterface
     {
         return new Promise(function ($resolve) use ($response, $postwares) {
             if (count($postwares) === 0) {

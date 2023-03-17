@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Ragnarok\Bifrost;
 
+use HttpSoft\Message\Request;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Middleware\MiddlewareInterface;
 use Ragnarok\Bifrost\Middleware\RateLimitMiddleware;
-use Ragnarok\Bifrost\Multipart\Body;
 use React\Promise\ExtendedPromiseInterface;
 use React\Promise\Promise;
 use Ragnarok\Bifrost\Postware\PostwareInterface;
@@ -48,7 +50,7 @@ class Http
 
     public function get(
         EndpointInterface $endpoint,
-        null|string|array|Body $body = null,
+        null|string|array $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -61,7 +63,7 @@ class Http
 
     public function post(
         EndpointInterface $endpoint,
-        null|string|array|Body $body = null,
+        null|string|array $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -74,7 +76,7 @@ class Http
 
     public function put(
         EndpointInterface $endpoint,
-        null|string|array|Body $body = null,
+        null|string|array $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -87,7 +89,7 @@ class Http
 
     public function patch(
         EndpointInterface $endpoint,
-        null|string|array|Body $body = null,
+        null|string|array $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -100,7 +102,7 @@ class Http
 
     public function delete(
         EndpointInterface $endpoint,
-        null|string|array|Body $body = null,
+        null|string|array $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -114,19 +116,14 @@ class Http
     public function request(
         RequestTypes $requestType,
         EndpointInterface $endpoint,
-        null|string|array|Body $body = null,
+        null|string|array $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
-        $requestContent = RequestContent::from($body);
-
         $request = new Request(
-            $requestType,
-            $endpoint,
-            $requestContent->body,
-            array_merge(
-                $requestContent->headers,
-                $headers
-            )
+            $requestType->value, 
+            $endpoint->getCompleteEndpoint(), 
+            $headers, 
+            $body
         );
 
         return $this
@@ -142,7 +139,7 @@ class Http
     /**
      * @param MiddlewareInterface[] $middlewares
      */
-    private function runMiddlewares(Request $request, array $middlewares): ExtendedPromiseInterface
+    private function runMiddlewares(RequestInterface $request, array $middlewares): ExtendedPromiseInterface
     {
         return new Promise(function ($resolve) use ($request, $middlewares) {
             if (count($middlewares) === 0) {
@@ -162,7 +159,7 @@ class Http
     /**
      * @param PostwareInterface[] $postwares
      */
-    private function runPostwares(Response $response, array $postwares): ExtendedPromiseInterface
+    private function runPostwares(ResponseInterface $response, array $postwares): ExtendedPromiseInterface
     {
         return new Promise(function ($resolve) use ($response, $postwares) {
             if (count($postwares) === 0) {

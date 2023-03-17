@@ -120,9 +120,9 @@ class Http
         array $headers = []
     ): ExtendedPromiseInterface {
         $request = new Request(
-            $requestType->value, 
-            $endpoint->getCompleteEndpoint(), 
-            $headers, 
+            $requestType->value,
+            $endpoint->getCompleteEndpoint(),
+            $headers,
             $body
         );
 

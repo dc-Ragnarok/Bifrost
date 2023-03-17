@@ -7,6 +7,8 @@ namespace Tests\Ragnarok\Bifrost;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Ragnarok\Bifrost\DriverInterface;
 use Ragnarok\Bifrost\Endpoint;
 use Ragnarok\Bifrost\Enums\RequestTypes;
@@ -14,6 +16,7 @@ use Ragnarok\Bifrost\Http;
 use Ragnarok\Bifrost\Middleware\MiddlewareInterface;
 use Ragnarok\Bifrost\Postware\PostwareInterface;
 use Ragnarok\Bifrost\Request;
+use Ragnarok\Bifrost\Response;
 use React\Promise\Promise;
 
 use function React\Async\await;
@@ -29,7 +32,7 @@ class HttpTest extends TestCase
             ->shouldReceive('makeRequest')
             ->andReturnUsing(function () {
                 return new Promise(
-                    fn ($resolve) => $resolve(Mockery::mock(Response::class))
+                    fn ($resolve) => $resolve(Mockery::mock(ResponseInterface::class))
                 );
             });
 
@@ -129,17 +132,17 @@ class HttpTest extends TestCase
             postwares: [$pw1, $pw2]
         );
 
-        $mockResponse = Mockery::mock(Response::class);
+        $mockResponse = Mockery::mock(ResponseInterface::class);
 
-        $pw1->shouldReceive('handle')->andReturnUsing(function ($request, $next) use ($mockResponse) {
+        $pw1->shouldReceive('handle')->andReturnUsing(function ($response, $next) use ($mockResponse) {
             $next($mockResponse);
         });
 
         $pw2->shouldReceive('handle')->with(
             $mockResponse,
             Mockery::on(fn ($v) => true)
-        )->andReturnUsing(function ($request, $next) {
-            $next($request);
+        )->andReturnUsing(function ($response, $next) {
+            $next($response);
         });
 
         await($http->request(
@@ -164,17 +167,17 @@ class HttpTest extends TestCase
 
         $http->withPostware($pw2);
 
-        $mockResponse = Mockery::mock(Response::class);
+        $mockResponse = Mockery::mock(ResponseInterface::class);
 
-        $pw1->shouldReceive('handle')->andReturnUsing(function ($request, $next) use ($mockResponse) {
+        $pw1->shouldReceive('handle')->andReturnUsing(function ($response, $next) use ($mockResponse) {
             $next($mockResponse);
         });
 
         $pw2->shouldReceive('handle')->with(
             $mockResponse,
             Mockery::on(fn ($v) => true)
-        )->andReturnUsing(function ($request, $next) {
-            $next($request);
+        )->andReturnUsing(function ($response, $next) {
+            $next($response);
         });
 
         await($http->request(
@@ -203,7 +206,7 @@ class HttpTest extends TestCase
         );
 
         $driver->shouldHaveReceived('makeRequest')->with(Mockery::on(
-            function (Request $request) use ($type) {
+            function (RequestInterface $request) use ($type) {
                 return $request->getMethod() === $type->value;
             }
         ));

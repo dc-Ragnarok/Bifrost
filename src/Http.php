@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Ragnarok\Bifrost\Enums\RequestTypes;
 use Ragnarok\Bifrost\Middleware\MiddlewareInterface;
 use Ragnarok\Bifrost\Middleware\RateLimitMiddleware;
+use Ragnarok\Bifrost\Multipart\Body;
 use React\Promise\ExtendedPromiseInterface;
 use React\Promise\Promise;
 use Ragnarok\Bifrost\Postware\PostwareInterface;
@@ -50,7 +51,7 @@ class Http
 
     public function get(
         EndpointInterface $endpoint,
-        null|string|array $body = null,
+        null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -63,7 +64,7 @@ class Http
 
     public function post(
         EndpointInterface $endpoint,
-        null|string|array $body = null,
+        null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -76,7 +77,7 @@ class Http
 
     public function put(
         EndpointInterface $endpoint,
-        null|string|array $body = null,
+        null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -89,7 +90,7 @@ class Http
 
     public function patch(
         EndpointInterface $endpoint,
-        null|string|array $body = null,
+        null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -102,7 +103,7 @@ class Http
 
     public function delete(
         EndpointInterface $endpoint,
-        null|string|array $body = null,
+        null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         return $this->request(
@@ -116,7 +117,7 @@ class Http
     public function request(
         RequestTypes $requestType,
         EndpointInterface $endpoint,
-        null|string|array $body = null,
+        null|string|array|Body $body = null,
         array $headers = []
     ): ExtendedPromiseInterface {
         $request = new Request(

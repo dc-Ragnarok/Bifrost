@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Ragnarok\Bifrost\Driver;
 
 use HttpSoft\Message\Request;
+use HttpSoft\Message\Stream;
+use HttpSoft\Message\StreamFactory;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Ragnarok\Bifrost\DriverInterface;
@@ -15,7 +17,15 @@ use function React\Async\await;
 
 abstract class DriverInterfaceTestCase extends TestCase
 {
+    protected StreamFactory $streamFactory;
     abstract protected function getDriver(): DriverInterface;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->streamFactory = new StreamFactory();
+    }
 
     private function getRequest(
         string $method,
@@ -27,7 +37,7 @@ abstract class DriverInterfaceTestCase extends TestCase
             $method,
             $url,
             $headers,
-            $content
+            $this->streamFactory->createStream($content)
         );
     }
 
